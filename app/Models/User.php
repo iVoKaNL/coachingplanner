@@ -43,6 +43,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
+    public function students()
+    {
+        return $this->hasMany(Student::class, 'coach_id', 'id');
+    }
+
     /**
      * Create a random guid
      * To prevent duplicates the function is recursive

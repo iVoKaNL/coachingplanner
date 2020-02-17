@@ -18,5 +18,5 @@ Route::post('login', [ 'as' => 'login', 'uses' => 'AuthController@login']);
 
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('user/profile', 'UserController@profile');
+    Route::get('students', 'StudentController@index');
 });
