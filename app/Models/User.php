@@ -1,14 +1,20 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasApiTokens;
+
+    /**
+     * @var string
+     */
+    protected $table = 'user';
 
     /**
      * The attributes that are mass assignable.
@@ -36,4 +42,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Create a random guid
+     * To prevent duplicates the function is recursive
+     *
+     * @param $tries , default is 5
+     * @return string
+     */
+    public static function createGuid($tries = 5): string
+    {
+        if ($tries == 0) {
+            return md5(microtime() . microtime());
+        }
+
+        $guid = md5(microtime());
+        $users = User::select('guid')->where('guid', $guid)->count();
+        if ($users) {
+            return self::createGuid($tries - 1);
+        }
+        return $guid;
+    }
 }
