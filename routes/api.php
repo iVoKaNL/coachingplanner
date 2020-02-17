@@ -19,4 +19,8 @@ Route::post('login', [ 'as' => 'login', 'uses' => 'AuthController@login']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('students', 'StudentController@index');
+    Route::post('student/create', 'StudentController@create');
+    Route::get('student/{student}', 'StudentController@show');
+    Route::put('student/{student}', 'StudentController@edit');
+    Route::delete('student/{student}', 'StudentController@delete');
 });

@@ -16,6 +16,7 @@ class StudentResponse extends JsonResource
     {
         return [
             'publicId' => $this->guid,
+            'studentnumber' => $this->studentnumber,
             'firstname' => $this->firstname,
             'suffix' => $this->suffix,
             'lastname' => $this->lastname,
