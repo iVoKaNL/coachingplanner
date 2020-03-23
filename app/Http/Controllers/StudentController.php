@@ -22,7 +22,7 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         //get all parameters of request
-        $length = (int)$request->input('length', 25);
+        $length = (int)$request->input('length', 20);
         $searchValue = $request->input('search');
 
         $user = Auth::user();
@@ -31,10 +31,10 @@ class StudentController extends Controller
 
         if($searchValue != null) {
             $studentsResponse = $studentsResponse->where(function ($query) use ($searchValue) {
-                $query->where('firstname', 'ILIKE', '%' . $searchValue . '%');
-                $query->orWhere('lastname', 'ILIKE', '%' . $searchValue . '%');
-                $query->orWhere('email', 'ILIKE', '%' . $searchValue . '%');
-                $query->orWhere('studentnumber', 'ILIKE', '%' . $searchValue . '%');
+                $query->where('firstname', 'LIKE', '%' . $searchValue . '%');
+                $query->orWhere('lastname', 'LIKE', '%' . $searchValue . '%');
+                $query->orWhere('email', 'LIKE', '%' . $searchValue . '%');
+                $query->orWhere('studentnumber', 'LIKE', '%' . $searchValue . '%');
             });
         }
 

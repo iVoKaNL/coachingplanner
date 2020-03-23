@@ -16,11 +16,16 @@ use Illuminate\Http\Request;
 //Route::post('login', 'AuthController@login');
 Route::post('login', [ 'as' => 'login', 'uses' => 'AuthController@login']);
 
+Route::get('agenda/moments/{user}', 'AgendaController@getCoachingMoments');
+Route::post('agenda/moment/{user}', 'AgendaController@AssignCoachingMoment');
 
 Route::middleware('auth:api')->group(function () {
     Route::get('students', 'StudentController@index');
-    Route::post('student/create', 'StudentController@create');
+    Route::post('student', 'StudentController@create');
     Route::get('student/{student}', 'StudentController@show');
     Route::put('student/{student}', 'StudentController@edit');
     Route::delete('student/{student}', 'StudentController@delete');
+
+    Route::post('agenda', 'AgendaController@index');
+    Route::post('agenda/update', 'AgendaController@update');
 });
