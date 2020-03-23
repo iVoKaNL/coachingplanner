@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AgendaMomentRequest;
 use App\Http\Resources\AgendaResponse;
+use App\Http\Resources\NextCoachingMomentResponse;
 use App\Models\Agenda;
 use App\Models\Student;
 use App\Models\User;
@@ -146,5 +147,13 @@ class AgendaController extends Controller
         ]);
 
         return response()->json('Coaching moment is succesfully assigned');
+    }
+
+    public function getNextCoachingMoment()
+    {
+        $user = Auth::user();
+
+        return new NextCoachingMomentResponse($user->agendas()->whereNotNull("student_id")->whereDate("start_time", ">=", Carbon::now()->toDateTimeString())->orderBy("start_time")->first());
+
     }
 }
