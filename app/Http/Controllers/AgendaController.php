@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AgendaMomentRequest;
 use App\Http\Resources\AgendaResponse;
 use App\Http\Resources\NextCoachingMomentResponse;
+use App\Http\Resources\WeekOverviewResponse;
 use App\Models\Agenda;
 use App\Models\Student;
 use App\Models\User;
@@ -153,7 +154,50 @@ class AgendaController extends Controller
     {
         $user = Auth::user();
 
-        return new NextCoachingMomentResponse($user->agendas()->whereNotNull("student_id")->whereDate("start_time", ">=", Carbon::now()->toDateTimeString())->orderBy("start_time")->first());
+        return new NextCoachingMomentResponse($user->agendas()
+            ->whereNotNull("student_id")
+            ->whereDate("start_time", ">=", Carbon::now()->toDateTimeString())
+            ->orderBy("start_time")
+            ->first());
 
+    }
+
+    public function getWeekOverview()
+    {
+        $user = Auth::user();
+        $days = [
+            'monday' => 0,
+            'tuesday' => 0,
+            'wednesday' => 0,
+            'thursday' => 0,
+            'friday' => 0
+        ];
+
+        return new WeekOverviewResponse($user->agendas()
+            ->whereNotNull("student_id")
+            ->whereDate("start_time", ">=", Carbon::now()->startOfWeek()->toDateTimeString())
+            ->whereDate("end_time", "<=", Carbon::now()->endOfWeek()->toDateTimeString())
+            ->get()
+            ->transform(function($moment) use (&$days) { // The & before $days means it is a reference (so we can edit it)
+                switch (Carbon::parse($moment->start_time)->dayOfWeek) {
+                    case 1:
+                        $days['monday']++;
+                        break;
+                    case 2:
+                        $days['tuesday']++;
+                        break;
+                    case 3:
+                        $days['wednesday']++;
+                        break;
+                    case 4:
+                        $days['thursday']++;
+                        break;
+                    case 5:
+                        $days['friday']++;
+                        break;
+                }
+
+                return $days;
+            })->last());
     }
 }
