@@ -18,6 +18,7 @@ Route::post('login', [ 'as' => 'login', 'uses' => 'AuthController@login']);
 
 Route::get('agenda/moments/{user}', 'AgendaController@getCoachingMoments');
 Route::post('agenda/moment/{user}', 'AgendaController@AssignCoachingMoment');
+Route::get('user/students/{user}', 'UserController@getStudents');
 
 Route::middleware('auth:api')->group(function () {
     Route::get('students', 'StudentController@index');
@@ -29,5 +30,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('agenda', 'AgendaController@index');
     Route::post('agenda/update', 'AgendaController@update');
     Route::get('agenda/next', 'AgendaController@getNextCoachingMoment');
+    Route::get('agenda/students/notify', 'AgendaController@notifyStudents');
     Route::get('agenda/overview/week', 'AgendaController@getWeekOverview');
 });

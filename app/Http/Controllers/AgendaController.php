@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AgendaMomentRequest;
 use App\Http\Resources\AgendaResponse;
 use App\Http\Resources\NextCoachingMomentResponse;
+use App\Mail\NotifyStudents;
 use App\Http\Resources\WeekOverviewResponse;
 use App\Models\Agenda;
 use App\Models\Student;
@@ -12,6 +13,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class AgendaController extends Controller
 {
@@ -120,7 +122,7 @@ class AgendaController extends Controller
                         'location' => $agenda->location,
                         'assigned' => $full]);
                 }
-                return $dates;
+                return ['date' => $startTime, 'moments' => $dates];
             });
 
         return $agendaMoments;
@@ -154,12 +156,26 @@ class AgendaController extends Controller
     {
         $user = Auth::user();
 
+        return new NextCoachingMomentResponse($user->agendas()->whereNotNull("student_id")->whereDate("start_time", ">=", Carbon::now()->toDateTimeString())->orderBy("start_time")->first());
+    }
+
+    public function notifyStudents()
+    {
+        $user = Auth::user();
+
+        $students = $user->students()->get();
+        $when = now();
+        foreach ($students as $student) {
+            Mail::to($student)->later($when ,new NotifyStudents($student, $user->guid, $user->fullName));
+            $when = $when->addSeconds(3);
+        }
         return new NextCoachingMomentResponse($user->agendas()
             ->whereNotNull("student_id")
             ->whereDate("start_time", ">=", Carbon::now()->toDateTimeString())
             ->orderBy("start_time")
             ->first());
 
+        return response()->json('Send mail to students');
     }
 
     public function getWeekOverview()
