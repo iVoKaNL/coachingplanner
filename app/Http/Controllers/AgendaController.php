@@ -43,8 +43,8 @@ class AgendaController extends Controller
             } else {
                 $value = $request->input('added')[0];
             }
-            $startTime = Carbon::parse($value['StartTime'])->addHour();
-            $endTime = Carbon::parse($value['EndTime'])->addHour();
+            $startTime = Carbon::parse($value['StartTime']);
+            $endTime = Carbon::parse($value['EndTime']);
             $subject = $value['Subject'];
 
             Agenda::create([
@@ -64,8 +64,8 @@ class AgendaController extends Controller
                 $value = $request->input('changed')[0];
             }
 
-            $startTime = Carbon::parse($value['StartTime'])->addHour();
-            $endTime = Carbon::parse($value['EndTime'])->addHour();
+            $startTime = Carbon::parse($value['StartTime']);
+            $endTime = Carbon::parse($value['EndTime']);
             $agendaItem = Agenda::where('id', $value['Id'])->first();
 
             $agendaItem->subject = $value['Subject'];
@@ -95,6 +95,7 @@ class AgendaController extends Controller
             ->whereDate('start_time', '>=', Carbon::now())
             ->whereDate('start_time', '<', Carbon::now()->addDays(14))
             ->whereNull('student_id')
+            ->orderBy('start_time')
             ->get()
             ->transform(function ($agenda) {
                 $startTime = Carbon::parse($agenda->start_time);
@@ -104,6 +105,9 @@ class AgendaController extends Controller
                 for($i = 0; $i < $amountHalfHour; $i++) {
                     $addMinutes = $i * 30;
                     $time = $startTime->clone()->addMinutes($addMinutes);
+                    if($time->isBefore(Carbon::now()->setTimezone('Europe/Amsterdam')->toDateTimeString())) {
+                        continue;
+                    }
                     $full = Agenda::whereNotNull('student_id')
                         ->where(function($q) use ($time) {
                             $q->where('start_time', '>=' , $time->toDateTimeString());
@@ -169,11 +173,6 @@ class AgendaController extends Controller
             Mail::to($student)->later($when ,new NotifyStudents($student, $user->guid, $user->fullName));
             $when = $when->addSeconds(3);
         }
-        return new NextCoachingMomentResponse($user->agendas()
-            ->whereNotNull("student_id")
-            ->whereDate("start_time", ">=", Carbon::now()->toDateTimeString())
-            ->orderBy("start_time")
-            ->first());
 
         return response()->json('Send mail to students');
     }
