@@ -17,6 +17,7 @@ class MakeAgendaTable extends Migration
             $table->increments('id');
             $table->string('subject');
             $table->string('location')->nullable();
+            $table->string('description')->nullable();
             $table->timestamp('start_time');
             $table->timestamp('end_time');
             $table->timestamps();

@@ -14,10 +14,9 @@ class StudentsResponse extends JsonResource
      */
     public function toArray($request)
     {
-        //TODO: spacing for suffix
         return [
             'value' => $this->guid,
-            'label' => $this->firstname . $this->suffix . " " . $this->lastname
+            'label' => $this->full_name
         ];
     }
 }

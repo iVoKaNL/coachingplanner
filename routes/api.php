@@ -20,7 +20,11 @@ Route::get('agenda/moments/{user}', 'AgendaController@getCoachingMoments');
 Route::post('agenda/moment/{user}', 'AgendaController@AssignCoachingMoment');
 Route::get('user/students/{user}', 'UserController@getStudents');
 
+Route::get('user/{user}', 'UserController@getUser');
+
 Route::middleware('auth:api')->group(function () {
+    Route::post('logout', 'AuthController@logout');
+
     Route::get('students', 'StudentController@index');
     Route::post('student', 'StudentController@create');
     Route::get('student/{student}', 'StudentController@show');

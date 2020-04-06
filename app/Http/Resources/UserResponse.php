@@ -16,9 +16,7 @@ class UserResponse extends JsonResource
     {
         return [
             'publicId' => $this->guid,
-            'firstname' => $this->firstname,
-            'suffix' => $this->suffix,
-            'lastname' => $this->lastname,
+            'fullname' => $this->full_name,
             'email' => $this->email
         ];
     }

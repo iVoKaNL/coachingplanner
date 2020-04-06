@@ -19,8 +19,6 @@ use Illuminate\Support\Facades\Mail;
 class AgendaController extends Controller
 {
 
-    //TODO: add description to agenda class
-
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -37,6 +35,13 @@ class AgendaController extends Controller
     {
         $user = Auth::user();
 
+        $date = new Carbon('2020-10-25');
+        $addHours = 2;
+        if(Carbon::now()->isAfter($date)) {
+            $addHours = 1;
+        }
+
+
         if($request->input('action') == "insert" || ($request->input('action') == "batch" && $request->input('added') != null)) {
             $value = null;
             if($request->input('action') == "insert") {
@@ -44,13 +49,15 @@ class AgendaController extends Controller
             } else {
                 $value = $request->input('added')[0];
             }
-            $startTime = Carbon::parse($value['StartTime']);
-            $endTime = Carbon::parse($value['EndTime']);
+
+            $startTime = Carbon::parse($value['StartTime'])->addHours($addHours);
+            $endTime = Carbon::parse($value['EndTime'])->addHours($addHours);
             $subject = $value['Subject'];
 
             Agenda::create([
                 'subject' => $value['Subject'],
                 'location' => $value['Location'] ?? null,
+                'description' => $value['Description'] ?? null,
                 'start_time' => $startTime->toDateTimeString(),
                 'end_time' => $endTime->toDateTimeString(),
                 'coach_id' => $user->id
@@ -65,12 +72,13 @@ class AgendaController extends Controller
                 $value = $request->input('changed')[0];
             }
 
-            $startTime = Carbon::parse($value['StartTime']);
-            $endTime = Carbon::parse($value['EndTime']);
+            $startTime = Carbon::parse($value['StartTime'])->addHours($addHours);
+            $endTime = Carbon::parse($value['EndTime'])->addHours($addHours);
             $agendaItem = Agenda::where('id', $value['Id'])->first();
 
             $agendaItem->subject = $value['Subject'];
             $agendaItem->location = $value['Location'] ?? null;
+            $agendaItem->description = $value['Description'] ?? null;
             $agendaItem->start_time = $startTime->toDateTimeString();
             $agendaItem->end_time = $endTime->toDateTimeString();
             $agendaItem->save();
@@ -125,6 +133,7 @@ class AgendaController extends Controller
                         'start_time' => $time,
                         'end_time' => $time->clone()->addMinutes(30),
                         'location' => $agenda->location,
+                        'description' => $agenda->description,
                         'assigned' => $full]);
                 }
                 return ['date' => $startTime, 'moments' => $dates];
@@ -147,13 +156,14 @@ class AgendaController extends Controller
         $student->suffix != null ? $studentName .= $student->suffix . " " : null;
         $studentName .= $student->lastname;
 
-        $location = Agenda::where('start_time', '<=', $request->input('start_time'))
+        $parent = Agenda::where('start_time', '<=', $request->input('start_time'))
             ->where('end_time', '>=', $request->input('end_time'))
-            ->first('location')->location;
+            ->first('location');
 
         $agenda = Agenda::create([
             'subject' => $studentName,
-            'location' => $location,
+            'location' => $parent->location,
+            'description' => $parent->description,
             'start_time' => Carbon::parse($request->input('start_time'))->toDateTimeString(),
             'end_time' => Carbon::parse($request->input('end_time'))->toDateTimeString(),
             'coach_id' => $user->id,

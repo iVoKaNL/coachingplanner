@@ -13,6 +13,7 @@ class Agenda extends Model
         'end_time',
         'subject',
         'location',
+        'description',
         'coach_id',
         'student_id'
     ];

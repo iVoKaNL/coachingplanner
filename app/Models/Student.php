@@ -48,4 +48,12 @@ class Student extends Model
         }
         return $guid;
     }
+
+    public function getFullNameAttribute()
+    {
+        if($this->suffix != null) {
+            return "{$this->firstname} {$this->suffix} {$this->lastname}";
+        }
+        return "{$this->firstname} {$this->lastname}";
+    }
 }
