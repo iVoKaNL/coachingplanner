@@ -20,6 +20,7 @@ class AgendaResponse extends JsonResource
             'Location' => $this->location,
             'StartTime' => $this->start_time,
             'EndTime' => $this->end_time,
+            'Description' => $this->description,
             $this->mergeWhen($this->hasStudent(), function () {
                 return [
                     'CategoryColor' => '#ea7a57'

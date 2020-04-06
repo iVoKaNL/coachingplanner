@@ -28,4 +28,13 @@ class AuthController extends Controller
             return response()->json(['error'=>'failed to login'], 401);
         }
     }
+
+    /**
+     * Logout user.
+     */
+    public function logout()
+    {
+        Auth::user()->token()->revoke();
+        Auth::user()->token()->delete();
+    }
 }
