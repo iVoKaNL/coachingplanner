@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AgendaMomentRequest;
 use App\Http\Resources\AgendaResponse;
 use App\Http\Resources\NextCoachingMomentResponse;
+use App\Mail\Confirmation;
 use App\Mail\NotifyStudents;
 use App\Http\Resources\WeekOverviewResponse;
 use App\Models\Agenda;
@@ -127,7 +128,13 @@ class AgendaController extends Controller
                         'assigned' => $full]);
                 }
                 return ['date' => $startTime, 'moments' => $dates];
-            });
+            })
+            ->filter(function ($moment) {
+                if(empty($moment['moments'])) {
+                    return null;
+                }
+                return $moment;
+            })->values();
 
         return $agendaMoments;
     }
@@ -144,7 +151,7 @@ class AgendaController extends Controller
             ->where('end_time', '>=', $request->input('end_time'))
             ->first('location')->location;
 
-        Agenda::create([
+        $agenda = Agenda::create([
             'subject' => $studentName,
             'location' => $location,
             'start_time' => Carbon::parse($request->input('start_time'))->toDateTimeString(),
@@ -152,6 +159,8 @@ class AgendaController extends Controller
             'coach_id' => $user->id,
             'student_id' => $student->id
         ]);
+
+        Mail::to($student)->send(new Confirmation($student, $agenda));
 
         return response()->json('Coaching moment is succesfully assigned');
     }
