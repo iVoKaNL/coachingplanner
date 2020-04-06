@@ -29,4 +29,5 @@ Route::middleware('auth:api')->group(function () {
     Route::post('agenda', 'AgendaController@index');
     Route::post('agenda/update', 'AgendaController@update');
     Route::get('agenda/next', 'AgendaController@getNextCoachingMoment');
+    Route::get('agenda/students/notify', 'AgendaController@notifyStudents');
 });

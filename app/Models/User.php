@@ -84,4 +84,17 @@ class User extends Authenticatable
         }
         return $guid;
     }
+
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        if($this->suffix){
+            return "{$this->firstname} {$this->suffix} {$this->lastname}";
+        }
+        return "{$this->firstname} {$this->lastname}";
+    }
 }
