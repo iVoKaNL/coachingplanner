@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImportStudentRequest;
 use App\Http\Requests\StudentRequest;
 use App\Http\Resources\StudentResponse;
 use App\Models\Student;
@@ -95,6 +96,43 @@ class StudentController extends Controller
         $student->delete();
 
         return response()->json('Student is succesfully deleted', 204);
+    }
+
+    public function import(ImportStudentRequest $request)
+    {
+        $user = Auth::user();
+        $students = $request['students'];
+
+        if($this->checkUniqueValues($students)) {
+            return response()->json("Studentnumber or email are duplicated", 422);
+        }
+
+        foreach($students as $student) {
+            $student['guid'] = Student::createGuid();
+            $student['coach_id'] = $user->id;
+            Student::create($student);
+        }
+
+        return response()->json("Success", 200);
+    }
+
+    protected function checkUniqueValues($students)
+    {
+        $tempArr = array_unique(array_column($students, 'email'));
+        $newArr = array_intersect_key($students, $tempArr);
+
+        if (count($students) != count($newArr)) {
+            return true;
+        }
+
+        $tempArr = array_unique(array_column($students, 'studentnumber'));
+        $newArr = array_intersect_key($students, $tempArr);
+
+        if (count($students) != count($newArr)) {
+            return true;
+        }
+
+        return false;
     }
 
 }

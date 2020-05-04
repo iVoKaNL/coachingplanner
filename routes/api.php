@@ -27,6 +27,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('students', 'StudentController@index');
     Route::post('student', 'StudentController@create');
+    Route::post('student/import', 'StudentController@import');
     Route::get('student/{student}', 'StudentController@show');
     Route::put('student/{student}', 'StudentController@edit');
     Route::delete('student/{student}', 'StudentController@delete');
