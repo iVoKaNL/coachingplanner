@@ -333,7 +333,6 @@
     </style>
 </head>
 <body class="">
-<span class="preheader">This is preheader text. Some clients will show this text as a preview.</span>
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
     <tr>
         <td>&nbsp;</td>
@@ -350,7 +349,7 @@
                                 <tr>
                                     <td>
                                         <h1>Hi there,</h1>
-                                        <p>Het is weer tijd voor gesprekjes, plan ze nu in via deze mail. Dit kan nog verdere tekst bevatten. Werkt deze link niet doe het dan via deze link <a href="#"> link.com </a> </a></p>
+                                        <p>Het is weer tijd voor gesprekjes, plan ze nu in via deze mail. Dit kan nog verdere tekst bevatten. Werkt deze link niet doe het dan via deze link <a href="{{env('APP_ENV')}}/assign/{{$guid}}"> {env('APP_ENV')}}/assign/{{$guid}} </a> </a></p>
                                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                                             <tbody>
                                             <tr>

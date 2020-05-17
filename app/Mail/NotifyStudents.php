@@ -33,8 +33,8 @@ class NotifyStudents extends Mailable
      */
     public function build()
     {
-        return $this->from('mail@example.com', 'Mailtrap')
-            ->subject('Mailtrap Confirmation')
+        return $this->from('info@coachingplanner.nl', 'Coaching Planner')
+            ->subject('Coaching moments')
             ->view('emails.NotifyStudents', [
                 'student' => $this->student,
                 'guid' => $this->guid,

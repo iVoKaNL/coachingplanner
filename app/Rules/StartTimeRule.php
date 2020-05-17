@@ -31,19 +31,16 @@ class StartTimeRule implements Rule
 
         //check if date is in future
         if($startTime->isPast()) {
-            dd('test1');
             return false;
         }
 
         //check if end time is after begin time
         if(!$this->endTime->isAfter($startTime)) {
-            dd('test2');
             return false;
         }
 
         //check if difference between begin and end time is 30 minutes
         if($this->endTime->diffInMinutes($startTime) != 30) {
-            dd('test3');
             return false;
         }
 
@@ -54,7 +51,6 @@ class StartTimeRule implements Rule
             ->exists();
 
         if(!$possibleTime) {
-            dd('test4');
             return false;
         }
 
@@ -65,7 +61,6 @@ class StartTimeRule implements Rule
             ->exists();
 
         if($assigned) {
-            dd('test5');
             return false;
         }
 

@@ -333,7 +333,6 @@
     </style>
 </head>
 <body class="">
-<span class="preheader">This is preheader text. Some clients will show this text as a preview.</span>
 <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
     <tr>
         <td>&nbsp;</td>
@@ -350,7 +349,7 @@
                                 <tr>
                                     <td>
                                         <h1>Hi {{$student->firstname}},</h1>
-                                        <p>Het is weer tijd voor gesprekjes, plan ze nu in via deze mail. Dit kan nog verdere tekst bevatten. Werkt deze link niet doe het dan via deze link <a href="#"> link.com </a> </a></p>
+                                        <p>Het is weer tijd voor gesprekjes, plan ze nu in via deze mail. Dit kan nog verdere tekst bevatten. Werkt deze link niet doe het dan via deze link <a href="{{env('FRONTEND_URL')}}/assign/{{$guid}}"> {{env('FRONTEND_URL')}}/assign/{{$guid}} </a> </a></p>
                                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                                             <tbody>
                                             <tr>
@@ -358,7 +357,7 @@
                                                     <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                                         <tbody>
                                                         <tr>
-                                                            <td> <a href="localhost:3000/assign/{{$guid}}" target="_blank">Schrijf je in</a> </td>
+                                                            <td> <a href="{{env('FRONTEND_URL')}}/assign/{{$guid}}" target="_blank">Schrijf je in</a> </td>
                                                         </tr>
                                                         </tbody>
                                                     </table>

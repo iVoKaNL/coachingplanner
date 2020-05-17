@@ -2,12 +2,9 @@
 
 namespace App\Mail;
 
-use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Spatie\CalendarLinks\Link;
 
 class Confirmation extends Mailable
 {
@@ -33,7 +30,7 @@ class Confirmation extends Mailable
      */
     public function build()
     {
-        return $this->from('mail@example.com', 'Mailtrap')
+        return $this->from('info@coachingplanner.nl', 'Coaching Planner')
             ->subject('Moment Confirmation')
             ->view('emails.Confirmation', [
                 'student' => $this->student,

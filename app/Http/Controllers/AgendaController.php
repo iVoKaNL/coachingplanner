@@ -16,9 +16,43 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * @OA\Server(
+ *      url=L5_SWAGGER_CONST_HOST,
+ *      description="Coaching planner API Server"
+ * )
+ * Class UserController
+ * @package App\Http\Controllers
+ */
 class AgendaController extends Controller
 {
 
+    /**
+     * @OA\Post(
+     *      path="/agenda",
+     *      operationId="get_agenda",
+     *      tags={"Agenda"},
+     *      summary="Get agenda of coach",
+     *      description="Returns agenda of coaches to build agenda frontend",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="not found"
+     *      ),
+     *     security={
+     *         {"coachingplanner_auth_key"}
+     *     },
+     * )
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -31,6 +65,32 @@ class AgendaController extends Controller
         return AgendaResponse::collection($user->agendas()->whereDate('start_time', '>=', $startDate)->whereDate('start_time', '<=', $endDate)->get());
     }
 
+    /**
+     * @OA\Post(
+     *      path="/agenda/update",
+     *      operationId="update_agenda",
+     *      tags={"Agenda"},
+     *      summary="Update agenda of coach",
+     *      description="Update, create, delete agenda moment of coach",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="not found"
+     *      ),
+     *     security={
+     *         {"coachingplanner_auth_key"}
+     *     },
+     * )
+     * @param Request $request
+     * @throws \Exception
+     */
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -98,6 +158,32 @@ class AgendaController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *      path="/agenda/moments/{user}",
+     *      operationId="get_agenda_moments_coach",
+     *      tags={"Agenda"},
+     *      summary="Get agenda moments of coach per half an hour",
+     *      description="Returns agenda moments per day and per half an hour of coaches for students of coach",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="not found"
+     *      ),
+     *     security={
+     *         {"coachingplanner_auth_key"}
+     *     },
+     * )
+     * @param User $user
+     * @return mixed
+     */
     public function getCoachingMoments(User $user)
     {
         $agendaMoments = Agenda::where('coach_id', $user->id)
@@ -148,6 +234,37 @@ class AgendaController extends Controller
         return $agendaMoments;
     }
 
+    /**
+     * @OA\Post(
+     *      path="/agenda/moment/{user}",
+     *      operationId="assign_agenda_moment_to_student",
+     *      tags={"Agenda"},
+     *      summary="Assign coaching moment to student",
+     *      description="Assigning coaching moment to student of the coach",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/AgendaMomentRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="not found"
+     *      ),
+     *     security={
+     *         {"coachingplanner_auth_key"}
+     *     },
+     * )
+     * @param User $user
+     * @param AgendaMomentRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function AssignCoachingMoment(User $user, AgendaMomentRequest $request)
     {
         $student = Student::where('guid', $request->input('guid'))->first();
@@ -158,7 +275,7 @@ class AgendaController extends Controller
 
         $parent = Agenda::where('start_time', '<=', $request->input('start_time'))
             ->where('end_time', '>=', $request->input('end_time'))
-            ->first('location');
+            ->first();
 
         $agenda = Agenda::create([
             'subject' => $studentName,
@@ -175,6 +292,31 @@ class AgendaController extends Controller
         return response()->json('Coaching moment is succesfully assigned');
     }
 
+    /**
+     * @OA\Get(
+     *      path="/agenda/next",
+     *      operationId="get_next_agenda_moment",
+     *      tags={"Agenda"},
+     *      summary="Get next coaching moment",
+     *      description="Returns details of the next coaching moment for the coach",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="not found"
+     *      ),
+     *     security={
+     *         {"coachingplanner_auth_key"}
+     *     },
+     * )
+     * @return NextCoachingMomentResponse
+     */
     public function getNextCoachingMoment()
     {
         $user = Auth::user();
@@ -182,20 +324,68 @@ class AgendaController extends Controller
         return new NextCoachingMomentResponse($user->agendas()->whereNotNull("student_id")->whereDate("start_time", ">=", Carbon::now()->toDateTimeString())->orderBy("start_time")->first());
     }
 
+    /**
+     * @OA\Get(
+     *      path="agenda/students/notify",
+     *      operationId="notify_students",
+     *      tags={"Agenda"},
+     *      summary="Notify students to assign to coaching moment",
+     *      description="Sends mail to all the students of the coach to assign for a coaching moment",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="not found"
+     *      ),
+     *     security={
+     *         {"coachingplanner_auth_key"}
+     *     },
+     * )
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function notifyStudents()
     {
         $user = Auth::user();
 
         $students = $user->students()->get();
-        $when = now();
         foreach ($students as $student) {
-            Mail::to($student)->later($when ,new NotifyStudents($student, $user->guid, $user->fullName));
-            $when = $when->addSeconds(3);
+            Mail::to($student)->send(new NotifyStudents($student, $user->guid, $user->fullName));
         }
 
         return response()->json('Send mail to students');
     }
 
+    /**
+     * @OA\Get(
+     *      path="agenda/overview/week",
+     *      operationId="agenda_overview_week",
+     *      tags={"Agenda"},
+     *      summary="Get week overview of the coaching moments",
+     *      description="Returns number per day of the week with the amount of coaching moments",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *     @OA\Response(
+     *          response=404,
+     *          description="not found"
+     *      ),
+     *     security={
+     *         {"coachingplanner_auth_key"}
+     *     },
+     * )
+     * @return WeekOverviewResponse
+     */
     public function getWeekOverview()
     {
         $user = Auth::user();

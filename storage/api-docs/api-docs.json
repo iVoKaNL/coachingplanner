@@ -1,0 +1,844 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Coaching planner backend Documentation",
+        "description": "L5 Swagger OpenApi description",
+        "contact": {
+            "email": "rubenvdkamp08@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "Coaching planner API Server"
+        },
+        {
+            "url": "http://my-default-host.com",
+            "description": "Coaching planner API Server"
+        },
+        {
+            "url": "http://my-default-host.com",
+            "description": "Coaching planner API Server"
+        },
+        {
+            "url": "http://coachingplanner.test"
+        }
+    ],
+    "paths": {
+        "/agenda": {
+            "post": {
+                "tags": [
+                    "Agenda"
+                ],
+                "summary": "Get agenda of coach",
+                "description": "Returns agenda of coaches to build agenda frontend",
+                "operationId": "get_agenda",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "/agenda/update": {
+            "post": {
+                "tags": [
+                    "Agenda"
+                ],
+                "summary": "Update agenda of coach",
+                "description": "Update, create, delete agenda moment of coach",
+                "operationId": "update_agenda",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "/agenda/moments/{user}": {
+            "get": {
+                "tags": [
+                    "Agenda"
+                ],
+                "summary": "Get agenda moments of coach per half an hour",
+                "description": "Returns agenda moments per day and per half an hour of coaches for students of coach",
+                "operationId": "get_agenda_moments_coach",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "/agenda/moment/{user}": {
+            "post": {
+                "tags": [
+                    "Agenda"
+                ],
+                "summary": "Assign coaching moment to student",
+                "description": "Assigning coaching moment to student of the coach",
+                "operationId": "assign_agenda_moment_to_student",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AgendaMomentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "/agenda/next": {
+            "get": {
+                "tags": [
+                    "Agenda"
+                ],
+                "summary": "Get next coaching moment",
+                "description": "Returns details of the next coaching moment for the coach",
+                "operationId": "get_next_agenda_moment",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "agenda/students/notify": {
+            "get": {
+                "tags": [
+                    "Agenda"
+                ],
+                "summary": "Notify students to assign to coaching moment",
+                "description": "Sends mail to all the students of the coach to assign for a coaching moment",
+                "operationId": "notify_students",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "agenda/overview/week": {
+            "get": {
+                "tags": [
+                    "Agenda"
+                ],
+                "summary": "Get week overview of the coaching moments",
+                "description": "Returns number per day of the week with the amount of coaching moments",
+                "operationId": "agenda_overview_week",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "/students": {
+            "get": {
+                "tags": [
+                    "Student"
+                ],
+                "summary": "Get list of students",
+                "description": "Returns list of coaches students",
+                "operationId": "get_students",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "/student": {
+            "post": {
+                "tags": [
+                    "Student"
+                ],
+                "summary": "Create new student",
+                "description": "Created a new student for the coach that can assign coaching moment",
+                "operationId": "create_student",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateStudentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Student is successfully created"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "/student/{student}": {
+            "get": {
+                "tags": [
+                    "Student"
+                ],
+                "summary": "Get details of specific student",
+                "description": "Returns details of a specific student",
+                "operationId": "get_student",
+                "parameters": [
+                    {
+                        "name": "student",
+                        "in": "query",
+                        "description": "guid of the student",
+                        "required": true,
+                        "style": "form",
+                        "schema": {
+                            "type": "string",
+                            "example": "9c058e90-7ef1-11ea-a2bd-6db2999910ca"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Student"
+                ],
+                "summary": "Edit the given student when it's a student of the coach",
+                "description": "Edit the given student",
+                "operationId": "edit_student",
+                "parameters": [
+                    {
+                        "name": "student",
+                        "in": "query",
+                        "description": "guid of the student",
+                        "required": true,
+                        "style": "form",
+                        "schema": {
+                            "type": "string",
+                            "example": "9c058e90-7ef1-11ea-a2bd-6db2999910ca"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateStudentRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "500": {
+                        "description": "Something went wrong, please try again."
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Student"
+                ],
+                "summary": "Delete the given student when it's a student of the coach",
+                "description": "Delete the given student",
+                "operationId": "delete_student",
+                "parameters": [
+                    {
+                        "name": "student",
+                        "in": "query",
+                        "description": "guid of the student",
+                        "required": true,
+                        "style": "form",
+                        "schema": {
+                            "type": "string",
+                            "example": "9c058e90-7ef1-11ea-a2bd-6db2999910ca"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    },
+                    "500": {
+                        "description": "Something went wrong, please try again."
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "/student/import": {
+            "post": {
+                "tags": [
+                    "Student"
+                ],
+                "summary": "Import students from .csv",
+                "description": "Import student from csv to make it easier to add students",
+                "operationId": "import_students",
+                "requestBody": {
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "/user/students/{user}": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get list of students",
+                "description": "Returns list of students of the coach",
+                "operationId": "get_students_of_coach",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        },
+        "/user/{user}": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get Coach (user) details",
+                "description": "Returns details of the user (coach)",
+                "operationId": "get_user_details",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "not found"
+                    }
+                },
+                "security": [
+                    [
+                        "coachingplanner_auth_key"
+                    ]
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AgendaMomentRequest": {
+                "title": "Assign agenda moment request",
+                "description": "Assign agenda moment to student of coach request body data",
+                "required": [
+                    "guid",
+                    "start_time",
+                    "end_time"
+                ],
+                "properties": {
+                    "guid": {
+                        "title": "guid",
+                        "description": "Guid of the student that want to assign",
+                        "type": "string",
+                        "example": "9c058e90-7ef1-11ea-a2bd-6db2999910ca"
+                    },
+                    "start_time": {
+                        "title": "start_time",
+                        "description": "Start time of the assigned moment",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-03-10 15:00:00"
+                    },
+                    "end_time": {
+                        "title": "end_time",
+                        "description": "End time of the assigned moment",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-03-10 15:30:00"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateStudentRequest": {
+                "title": "Create student request",
+                "description": "Create new student request body data",
+                "required": [
+                    "studentnumber",
+                    "firstname",
+                    "lastname",
+                    "email"
+                ],
+                "properties": {
+                    "studentnumber": {
+                        "title": "studentnumber",
+                        "description": "Studentnumber of the new student",
+                        "type": "string",
+                        "example": "1112200"
+                    },
+                    "firstname": {
+                        "title": "firstname",
+                        "description": "Firstname of the new student",
+                        "type": "string",
+                        "example": "Peter"
+                    },
+                    "suffix": {
+                        "title": "suffix",
+                        "description": "Suffix of the new student",
+                        "type": "string",
+                        "example": "de"
+                    },
+                    "lastname": {
+                        "title": "lastname",
+                        "description": "Lastname of the new student",
+                        "type": "string",
+                        "example": "Johnson"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "School mailof the new student",
+                        "type": "string",
+                        "example": "s1112200@student.windesheim.nl"
+                    }
+                },
+                "type": "object"
+            },
+            "Agenda": {
+                "title": "Agenda",
+                "description": "Agenda model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "subject": {
+                        "title": "Subject",
+                        "description": "Subject/Title of the agenda moment",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Conversation"
+                    },
+                    "location": {
+                        "title": "Location",
+                        "description": "Location of the agenda moment",
+                        "type": "string",
+                        "format": "string",
+                        "example": "t1.01"
+                    },
+                    "description": {
+                        "title": "Descripiton",
+                        "description": "Description of the agenda moment",
+                        "type": "string",
+                        "format": "string",
+                        "example": "Talking about school"
+                    },
+                    "start_time": {
+                        "title": "Start time",
+                        "description": "Start time of agenda moment",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 15:00:00"
+                    },
+                    "end_time": {
+                        "title": "End time",
+                        "description": "End time of agenda moment",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:00:00"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "coach_id": {
+                        "title": "Coach (id)",
+                        "description": "Id of students coach",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "coach": {
+                        "title": "Coach",
+                        "description": "Coach of the student model",
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "student_id": {
+                        "title": "Student (id)",
+                        "description": "Id of the assigned student",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "student": {
+                        "title": "Student",
+                        "description": "Student assigned to agenda moment model",
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Agenda"
+                }
+            },
+            "Student": {
+                "title": "Student",
+                "description": "Student model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "guid": {
+                        "title": "GUID",
+                        "description": "GUID",
+                        "type": "string",
+                        "format": "string",
+                        "example": "kl2o-asle-12li-klsad"
+                    },
+                    "studentnumber": {
+                        "title": "Studentnumber",
+                        "description": "Studentnumber",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1112233
+                    },
+                    "firstname": {
+                        "title": "Firstname",
+                        "description": "Firstname of the student",
+                        "type": "string",
+                        "example": "Steve"
+                    },
+                    "suffix": {
+                        "title": "Suffix",
+                        "description": "Suffix of the student",
+                        "type": "string",
+                        "example": "van"
+                    },
+                    "lastname": {
+                        "title": "Lastname",
+                        "description": "Lastname of the student",
+                        "type": "string",
+                        "example": "Jobs"
+                    },
+                    "email": {
+                        "title": "Email",
+                        "description": "Email of the user",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example@example.nl"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "coach_id": {
+                        "title": "Coach (id)",
+                        "description": "Id of students coach",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "coach": {
+                        "title": "Coach",
+                        "description": "Coach of the student model",
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Student"
+                }
+            },
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "guid": {
+                        "title": "GUID",
+                        "description": "GUID",
+                        "type": "string",
+                        "format": "string",
+                        "example": "kl2o-asle-12li-klsad"
+                    },
+                    "firstname": {
+                        "title": "Firstname",
+                        "description": "Firstname of the user",
+                        "type": "string",
+                        "example": "Steve"
+                    },
+                    "suffix": {
+                        "title": "Suffix",
+                        "description": "Suffix of the user",
+                        "type": "string",
+                        "example": "van"
+                    },
+                    "lastname": {
+                        "title": "Lastname",
+                        "description": "Lastname of the user",
+                        "type": "string",
+                        "example": "Jobs"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "description": "Password of the user",
+                        "type": "string",
+                        "example": "password"
+                    },
+                    "email": {
+                        "title": "Email",
+                        "description": "Email of the user",
+                        "type": "string",
+                        "format": "string",
+                        "example": "example@example.nl"
+                    },
+                    "username": {
+                        "title": "Username",
+                        "description": "Username of the user",
+                        "type": "string",
+                        "format": "string",
+                        "example": "username"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "User"
+                }
+            }
+        },
+        "securitySchemes": {
+            "coachingplanner_auth_key": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    }
+}
