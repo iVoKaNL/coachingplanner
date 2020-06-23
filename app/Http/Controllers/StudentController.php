@@ -116,8 +116,6 @@ class StudentController extends Controller
         $validated['coach_id'] = $user->id;
         $validated['guid'] = Student::createGuid();
 
-        dd($validated);
-
         try {
             Student::create($validated);
         } catch (\Exception $exception) {
